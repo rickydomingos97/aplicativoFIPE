@@ -2,9 +2,11 @@ package br.com.alura.aplicativoFIPE.principal;
 
 import br.com.alura.aplicativoFIPE.model.Dados;
 import br.com.alura.aplicativoFIPE.model.Modelos;
+import br.com.alura.aplicativoFIPE.model.Veiculo;
 import br.com.alura.aplicativoFIPE.service.ConsumoApi;
 import br.com.alura.aplicativoFIPE.service.ConverteDados;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -46,7 +48,7 @@ public class Principal {
                 .sorted(Comparator.comparing(Dados::codigo))
                 .forEach(System.out::println);
 
-        System.out.println("Informe o codigo da marca para consulta:");
+        System.out.println("\nInforme o codigo da marca para consulta:");
         var codigoMarca = leitura.nextLine();
 
         endereco = endereco + "/" + codigoMarca + "/modelos";
@@ -59,7 +61,7 @@ public class Principal {
                 .sorted(Comparator.comparing(Dados::codigo))
                 .forEach(System.out::println);
 
-        System.out.println("Digite um trecho do nome do carro a ser escolhido: ");
+        System.out.println("\nDigite um trecho do nome do carro a ser escolhido: ");
         var nomeveiculo = leitura.nextLine();
 
         List<Dados> modelosFiltrados = modeloLista.modelos().stream()
@@ -69,6 +71,24 @@ public class Principal {
         System.out.println("\nModelos filtrados: ");
         modelosFiltrados.forEach(System.out::println);
 
-        System.out.println("Digite o codigo do modelo desejado: ");
+        System.out.println("\nDigite o codigo do modelo desejado: ");
+        var codigoModelo = leitura.nextLine();
+
+        endereco = endereco + "/" + codigoModelo + "/anos";
+        json = consumo.obterDados(endereco);
+        List<Dados> anos = conversor.obterLista(json, Dados.class);
+        List<Veiculo> veiculos = new ArrayList<>();
+
+        for (int i = 0; i < anos.size(); i++) {
+            var enderecoAnos = endereco + "/" + anos.get(i).codigo();
+            json = consumo.obterDados(enderecoAnos);
+            Veiculo veiculo = conversor.obterDados(json, Veiculo.class);
+            veiculos.add(veiculo);
+
+        }
+
+        System.out.println("\nVeiculos com avaliacoes por ano de fabricacao: ");
+        veiculos.forEach(System.out::println);
+
     }
 }
