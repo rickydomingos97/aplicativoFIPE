@@ -6,7 +6,9 @@ import br.com.alura.aplicativoFIPE.service.ConsumoApi;
 import br.com.alura.aplicativoFIPE.service.ConverteDados;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner leitura = new Scanner(System.in);
@@ -56,5 +58,17 @@ public class Principal {
         modeloLista.modelos().stream()
                 .sorted(Comparator.comparing(Dados::codigo))
                 .forEach(System.out::println);
+
+        System.out.println("Digite um trecho do nome do carro a ser escolhido: ");
+        var nomeveiculo = leitura.nextLine();
+
+        List<Dados> modelosFiltrados = modeloLista.modelos().stream()
+                .filter(m -> m.nome().toLowerCase().contains(nomeveiculo.toLowerCase()))
+                .collect(Collectors.toList());
+
+        System.out.println("\nModelos filtrados: ");
+        modelosFiltrados.forEach(System.out::println);
+
+        System.out.println("Digite o codigo do modelo desejado: ");
     }
 }
